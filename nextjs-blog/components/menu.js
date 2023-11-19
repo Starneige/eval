@@ -5,11 +5,26 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import React, { useEffect, useState } from 'react';
+import CustomModal from './modal';
+import ConnexionForm from './connexionForm';
+import { getUser, removeToken, removeUser } from '../api';
+
 export default function Menu() {
+  const [openConnexionModal, setOpenConnexionModal] = React.useState(false);
+  const user = getUser();
+
+  const [domLoaded, setDomLoaded] = useState(false);
+
+  useEffect(() => {
+    setDomLoaded(true);
+  }, []);
+
+
   return (
-    <Navbar expand="lg" className="bg-body-tertiary">
+    <Navbar expand="lg" className=""  style={{"backgroundColor": "red"}}>
       <Container fluid>
-        <Navbar.Brand href="#">Garage V. Parrot</Navbar.Brand>
+        <Navbar.Brand href="/"><img src='/logo.png' width={"150px"} height={"150px"}/></Navbar.Brand>
         <Navbar.Toggle aria-controls="navbarScroll" />
         <Navbar.Collapse id="navbarScroll">
           <Nav
@@ -19,8 +34,22 @@ export default function Menu() {
           >
             <Nav.Link href="/">Accueil</Nav.Link>
             <Nav.Link href="/vente">vente</Nav.Link>
-            <Nav.Link href="/services">services</Nav.Link>  
+            <Nav.Link href="/services">services</Nav.Link>
           </Nav>
+          {domLoaded && !user ? <Button variant="outline-info" onClick={() => setOpenConnexionModal(true)}>Connexion</Button> : null}
+          {domLoaded && user && user.is_superuser ? <Button variant="outline-success">Inscription</Button> : null}
+          {domLoaded && user ? <Button variant="outline-success" onClick={() => {removeToken(); removeUser(); location.reload();}}>Deconnexion</Button> : null}
+          <CustomModal
+              open={openConnexionModal}
+              onClose={() => setOpenConnexionModal(false)}
+              title="Se connecter"
+              body={<ConnexionForm />}
+              size="medium"
+              // icon={faCircleExclamation}
+              button1Text="Fermer"
+              button2Text="Sauvegarder"
+              onButtonClick={() => setOpenConnexionModal(false)}
+          />
           <Form className="d-flex">
             <Form.Control
               type="search"
