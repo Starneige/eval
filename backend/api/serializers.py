@@ -28,8 +28,17 @@ class ServiceSerializer(serializers.HyperlinkedModelSerializer):
         model = Service
         fields = ['id', 'nom', 'prix']
 
-
 class AutomobileSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Automobile
         fields = ['id', 'nom_du_model', 'prix', 'kilometre']
+
+class HoraireSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Horaire
+        fields = ['id', 'jour', 'ferme', 'heure_ouverture_matin', 'heure_fermeture_matin', 'heure_ouverture_apresm', 'heure_fermeture_apresm']
+
+class ContactSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Contact
+        fields = ['id', 'email', 'nom', 'prenom', 'telephone', 'message']

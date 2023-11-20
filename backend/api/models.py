@@ -25,6 +25,16 @@ NOTE = [
     (5, "5"),
 ]
 
+JOUR = [
+    ("LU", "Lundi"),
+    ("MA", "Mardi"),
+    ("ME", "Mercredi"),
+    ("JE", "Jeudi"),
+    ("VE", "Vendredi"),
+    ("SA", "Samedi"),
+    ("DI", "Dimanche"),
+]
+
 # Create your models here.
 class Automobile(models.Model):
     nom_du_model = models.CharField(max_length=50)
@@ -34,6 +44,21 @@ class Automobile(models.Model):
 class Service(models.Model):
     nom = models.CharField(max_length=50)
     prix = models.IntegerField()
+
+class Horaire(models.Model):
+    jour = models.CharField(max_length=2, choices=JOUR, unique=True)
+    ferme = models.BooleanField(default=False)
+    heure_ouverture_matin = models.TimeField(blank=True, null=True)
+    heure_fermeture_matin = models.TimeField(blank=True, null=True)
+    heure_ouverture_apresm = models.TimeField(blank=True, null=True)
+    heure_fermeture_apresm = models.TimeField(blank=True, null=True)
+
+class Contact(models.Model):
+    email = models.CharField(max_length=50)
+    nom = models.CharField(max_length=50)
+    prenom = models.CharField(max_length=50)
+    telephone = models.CharField(max_length=50)
+    message = models.CharField(max_length=500)
 
 class CustomUserManager(BaseUserManager):
     """

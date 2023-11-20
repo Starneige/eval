@@ -3,13 +3,18 @@ from django.http import HttpResponse
 from rest_framework import viewsets
 from .models import *
 from .serializers import *
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from django.contrib.auth import get_user_model
 from rest_framework.response import Response
 from rest_framework.status import HTTP_201_CREATED, HTTP_400_BAD_REQUEST, HTTP_200_OK
 from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.generics import RetrieveAPIView
+
+class IsSuperUser(IsAdminUser):
+    def has_permission(self, request, view):
+        return bool(request.user and request.user.is_superuser)
+
 class AvisViewSet(viewsets.ModelViewSet):
     queryset = Avis.objects.all()
     # .filter(approuve=True)
@@ -48,6 +53,36 @@ class AutomobileViewSet(viewsets.ModelViewSet):
             permission_classes = [IsAuthenticated]
         return [permission() for permission in permission_classes]
     
+class HoraireViewSet(viewsets.ModelViewSet):
+    queryset = Horaire.objects.all()
+    # .filter(approuve=True)
+    serializer_class = HoraireSerializer
+
+    def get_permissions(self):
+        """
+        Instantiates and returns the list of permissions that this view requires.
+        """
+        if self.action == 'list':
+            permission_classes = []
+        else:
+            permission_classes = [IsAuthenticated]
+        return [permission() for permission in permission_classes]
+    
+class ContactViewSet(viewsets.ModelViewSet):
+    queryset = Contact.objects.all()
+    # .filter(approuve=True)
+    serializer_class = ContactSerializer
+
+    def get_permissions(self):
+        """
+        Instantiates and returns the list of permissions that this view requires.
+        """
+        if self.action == 'create':
+            permission_classes = []
+        else:
+            permission_classes = [IsAuthenticated]
+        return [permission() for permission in permission_classes]
+    
 class ServiceViewSet(viewsets.ModelViewSet):
     queryset = Service.objects.all()
     # .filter(approuve=True)
@@ -78,11 +113,12 @@ class UserView(APIView):
 
 class RegisterView(APIView):
     http_method_names = ['post']
+    permission_classes = [IsAuthenticated, IsSuperUser]
 
     def post(self, *args, **kwargs):
         serializer = UserSerializer(data=self.request.data)
         if serializer.is_valid():
-            get_user_model().objects.create_user(**serializer.validated_data)
+            get_user_model().objects.create_user(**serializer.validated_data, is_staff=True, is_superuser=False)
             return Response(status=HTTP_201_CREATED)
         return Response(status=HTTP_400_BAD_REQUEST, data={'errors': serializer.errors})
 

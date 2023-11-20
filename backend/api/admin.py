@@ -19,6 +19,16 @@ class ServiceAdmin(admin.ModelAdmin):
 
 admin.site.register(Service, ServiceAdmin)
 
+class HoraireAdmin(admin.ModelAdmin):
+    list_display = ('jour', 'ferme', 'heure_ouverture_matin', 'heure_fermeture_matin', 'heure_ouverture_apresm', 'heure_fermeture_apresm')
+
+admin.site.register(Horaire, HoraireAdmin)
+
+class ContactAdmin(admin.ModelAdmin):
+    list_display = ('email', 'nom', 'prenom', 'telephone', 'message')
+
+admin.site.register(Contact, ContactAdmin)
+
 class CustomUserAdmin(UserAdmin):
     fieldsets = (
         (None, {'fields': ('email', 'password')}),

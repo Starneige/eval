@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework import routers
-from .views import AvisViewSet, UserViewSet, AutomobileViewSet, EmailTokenObtainPairView, RegisterView, UserView, ServiceViewSet
+from .views import AvisViewSet, UserViewSet, AutomobileViewSet, EmailTokenObtainPairView, RegisterView, UserView, ServiceViewSet, HoraireViewSet, ContactViewSet
 from rest_framework_simplejwt.views import TokenRefreshView
 # Routers provide an easy way of automatically determining the URL conf.
 
@@ -9,6 +9,8 @@ router.register(r'avis', AvisViewSet)
 router.register(r'user', UserViewSet)
 router.register(r'automobile', AutomobileViewSet)
 router.register(r'service', ServiceViewSet)
+router.register(r'horaire', HoraireViewSet)
+router.register(r'contact', ContactViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),

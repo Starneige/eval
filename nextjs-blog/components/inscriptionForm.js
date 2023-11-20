@@ -9,7 +9,7 @@ import api, { setToken, setUser } from '../api';
 import { yupResolver } from "@hookform/resolvers/yup"
 import * as yup from "yup"
 
-export default function ConnexionForm({ email = "", password = "" }) {
+export default function InscriptionForm({ email = "", password = "" }) {
   const [isAdmin, setisAdmin] = useState(true);
   const [isEmployee, setisEmployee] = useState(false);
 
@@ -28,7 +28,7 @@ export default function ConnexionForm({ email = "", password = "" }) {
   const { register, handleSubmit, reset, control, setValue, formState: { errors } } = useForm({defaultValues: defaultValues, resolver: yupResolver(schema)});
 
   const onSubmit = (data) => {
-    api.post('/token/obtain/', data)
+    api.post('/register/', data)
       .then(function (response) {
         // handle success
         console.log(response.data);
